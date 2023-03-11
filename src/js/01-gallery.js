@@ -7,7 +7,7 @@ import { galleryItems } from './gallery-items';
 console.log(galleryItems);
 
 const galleryEl = document.querySelector(".gallery");
-
+    
 const pictures = createImg(galleryItems);
 
 galleryEl.insertAdjacentHTML("afterbegin", pictures);
