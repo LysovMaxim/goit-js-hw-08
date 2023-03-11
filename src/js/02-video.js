@@ -10,6 +10,7 @@ player.on('timeupdate', throttle(function (data) {
 
 const correntTime = localStorage.getItem("videoplayer-current-time");
 
+
 const time = JSON.parse(correntTime);
 
 player
