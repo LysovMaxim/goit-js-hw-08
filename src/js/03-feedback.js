@@ -1,35 +1,60 @@
-const formEl = document.querySelector(".feedback-form");
-console.dir(formEl);
+const form = document.querySelector('.feedback-form');
+import throttle from 'lodash.throttle';
+const CURRENT_VALUE = 'feedback-form-state';
+
+const formData = {}
+form.addEventListener('input', throttle(e =>
+{
+    formData[e.target.name] = e.target.value; onInputFormValue();
+}, 500));
 
 
+function onInputFormValue() {
+    const inputValue = JSON.stringify(formData);
+    localStorage.setItem(CURRENT_VALUE, inputValue);
+};
 
-formEl.addEventListener("input", (event) => {
-      const {
-    elements: { email, message }
-  } = event.currentTarget;
-    localStorage.setItem("feedback-form-state", JSON.stringify({ email: email.value, message: message.value }))
+saveForm();
+function saveForm() {
+  const complectedForm = JSON.parse(localStorage.getItem(CURRENT_VALUE));
+  if (complectedForm) {
+    form.email.value = complectedForm.email;
+    form.message.value = complectedForm.message;
+  }
+}
 
-    let messages = localStorage.getItem("feedback-form-state")
-    console.log(messages)
-
-    let parseMessage = JSON.parse(messages);
-    console.log(parseMessage)
-
-    if (parseMessage) {
-        formEl.email.value = parseMessage.email
-    }
+form.addEventListener('submit', event => {
+    event.preventDefault();
+    console.log(formData)
+    event.currentTarget.reset();
+  localStorage.removeItem(CURRENT_VALUE);
 });
 
 
-formEl.addEventListener("submit", (event) => {
-    event.preventDefault();
-              const {
-    elements: { email, message }
-          } = event.currentTarget;
-    console.log({ email: email.value, message: message.value })
-    event.currentTarget.reset();
-    localStorage.removeItem("feedback-form-state");
-
-
-})
+// const throttle = require('lodash.throttle');
+// const STORAGE_KEY = 'feedback-form-state';const formData = {};
+// const form = document.querySelector('.feedback-form');
+// form.addEventListener('submit', onFormSubmit);
+// form.addEventListener('input', throttle(e => { formData[e.target.name] = e.target.value; onInputFormValue(); }, 500));
+// populateFormInput();
+// function onFormSubmit(e) {  e.preventDefault();
+//   console.log(formData);
+//     e.currentTarget.reset();
+//     localStorage.removeItem(STORAGE_KEY);
+//     Object.keys(formData).forEach(el => delete formData[el]);
+// }
+// function onInputFormValue() {
+//     const inputValue = JSON.stringify(formData);
+//     localStorage.setItem(STORAGE_KEY, inputValue);
+// }
+// function populateFormInput() {  const storageData = localStorage.getItem(STORAGE_KEY);
+//   if (!storageData) {    return;  }
+//   try {    const savedData = JSON.parse(storageData);
+//         if (savedData) {
+//             Object.entries(savedData).forEach(([name, value]) => {
+//                 const input = form.querySelector(`[name="${name}"]`); input.value = value; formData[name] = value;
+//             });
+//         }
+//     } catch (error) { console.error(error); }
+// }
 
